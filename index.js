@@ -1,0 +1,31 @@
+const CategoryController = require("./controllers/CategoryController");
+const UserController = require("./controllers/UserController");
+const CourseController = require("./controllers/CourseController");
+console.log(CourseController);
+const AuthController = require("./controllers/AuthController");
+const authMiddleware = require("./middleware/authMiddleware");
+const adminMiddleware = require("./middleware/adminMiddleware");
+const express = require("express");
+const app = express();
+app.use(express.json());
+
+app.get("/categories/:id", CategoryController.getCategoryById);
+app.get("/categories", CategoryController.getAllCategories);
+app.delete("/categories/:id", authMiddleware, adminMiddleware, CategoryController.deleteCategory);
+app.post("/categories", authMiddleware, adminMiddleware, CategoryController.createCategory);
+app.patch("/categories/:id", authMiddleware, adminMiddleware, CategoryController.patchCategory);
+app.get("/users", authMiddleware, adminMiddleware, UserController.getAllUsers);
+app.get("/users/:id", authMiddleware, adminMiddleware, UserController.getUserById);
+app.post("/users", UserController.createUser);
+app.put("/users/:id", authMiddleware, adminMiddleware, UserController.updateUser);
+app.delete("/users/:id",  authMiddleware, adminMiddleware, UserController.deleteUser);
+app.get("/courses", CourseController.getAllCourses);
+app.get("/courses/:id", CourseController.getCourseById);
+app.get("/courses/title/:title", CourseController.getCourseByTitle);
+app.post("/courses", authMiddleware, adminMiddleware, CourseController.createCourse);
+app.patch("/courses/:id", authMiddleware, adminMiddleware, CourseController.patchCourse);
+app.delete("/courses/:id",authMiddleware, adminMiddleware,  CourseController.deleteCourse);
+app.post("/auth/login", AuthController.login);
+app.listen(3000, () => {
+    console.log("Server is running on port 3000");
+});
